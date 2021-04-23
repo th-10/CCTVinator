@@ -303,4 +303,4 @@ def processVideo(st):
     for obj in moving_objs:
         print(obj.boxes)
 
-    return {timestamps: timestamps, filename:filename, total_objects: len(moving_objs)}
+    return {"timestamps": timestamps, "filename":filename, "total_objects": len(moving_objs)}
