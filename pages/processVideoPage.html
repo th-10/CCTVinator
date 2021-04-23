@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Upload | Freehand.io</title>
+
+    <meta charset="utf-8" />
+    <!--[if IE
+      ]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"
+    /><![endif]-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700%7COpen+Sans:400,400i,700%7CNoto+Serif:400i"
+      rel="stylesheet"
+    />
+
+    <!-- Css -->
+    <link rel="stylesheet" href="./assets2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets2/css/magnific-popup.css" />
+    <link rel="stylesheet" href="./assets2/css/font-icons.css" />
+    <link rel="stylesheet" href="./assets2/css/sliders.css" />
+    <link rel="stylesheet" href="./assets2/css/style.css" />
+
+    <!-- Description -->
+    <meta name="description" content=" Create websites just with Drawings!" />
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="./assets2/img/ourlogo.png" />
+    <link rel="apple-touch-icon" href="./assets2/img/ourlogo.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="./assets2/img/ourlogo.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="./assets2/img/ourlogo.png"
+    />
+    <style>
+      .file-upload {
+        background-color: #ffffff;
+        width: 100%;
+        margin: 0 auto;
+        padding: 5%;
+      }
+
+      .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #5969ff;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #5969ff;
+        transition: all 0.2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .file-upload-btn:hover {
+        background: #5969ff;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .file-upload-btn:active {
+        border: 0;
+        transition: all 0.2s ease;
+      }
+
+      .file-upload-content {
+        display: none;
+        text-align: center;
+      }
+
+      .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #5969ff;
+        position: relative;
+      }
+
+      .image-dropping,
+      .image-upload-wrap:hover {
+        background-color: #596aff8f;
+        border: 4px dashed #ffffff;
+      }
+
+      .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+      }
+
+      .drag-text {
+        text-align: center;
+      }
+
+      .drag-text h3 {
+        font-weight: 100;
+        text-transform: uppercase;
+        color: #5969ff;
+        padding: 60px 0;
+      }
+
+      .file-upload-image {
+        max-height: 200px;
+        max-width: 200px;
+        margin: auto;
+        padding: 20px;
+      }
+
+      .remove-image {
+        width: 200px;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all 0.2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .remove-image:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .remove-image:active {
+        border: 0;
+        transition: all 0.2s ease;
+      }
+    </style>
+    <script
+      class="jsbin"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"
+    ></script>
+  </head>
+
+  <body class="relative">
+    <!-- Preloader -->
+    <div class="loader-mask">
+      <div class="loader">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="main-wrapper oh">
+      <div class="content-wrapper oh">
+        <!-- Page Title -->
+        <section
+          class="page-title text-center"
+          style="background-image: url(./assets2/img/page_title/b.jpg)"
+        >
+          <div class="container relative clearfix">
+            <div class="title-holder">
+              <div class="title-text">
+                <h1 class="uppercase">Lets go !</h1>
+                <h3 style="color: aliceblue">Upload your CCTV Footage</h3>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- end page title -->
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 col-xs-12 col-sm-6">
+              <div class="file-upload">
+                <div class="image-upload-wrap">
+                  <input
+                    class="file-upload-input"
+                    type="file"
+                    onchange="readURL(this);"
+                    accept="video/*"
+                  />
+                  <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                  </div>
+                </div>
+                <div class="file-upload-content">
+                  <img class="file-upload-image" src="#" alt="your image" />
+                  <div class="image-title-wrap">
+                    <button
+                      type="button"
+                      onclick="removeUpload()"
+                      class="remove-image"
+                    >
+                      Remove <span class="image-title">Uploaded Image</span>
+                    </button>
+                  </div>
+                </div>
+                <button
+                  class="file-upload-btn"
+                  type="button"
+                  onclick="$('.file-upload-input').trigger( 'click' )"
+                >
+                  Add Image
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-1 col-md-1"></div>
+            <div
+              class="col-xs-12 col-sm-5 col-md-5"
+              style="margin-top: 5%"
+              style="align-items: center; text-align: center"
+            >
+              <p
+                class="lead"
+                style="
+                  align-items: center;
+                  text-align: center;
+                  margin-bottom: 100;
+                "
+              >
+                Upload CCTV Footage to Process and Summarize it.
+              </p>
+
+              <div
+                class="tp-caption tp-resizeme"
+                data-x="center"
+                data-y="center"
+                data-hoffset="0"
+                data-voffset="[200, 100, 80, 60]"
+                data-lineheight="[44]"
+                data-frames='[{"from":"y:100px;rX:90deg;opacity:0;","speed":1500,"to":"o:1;","delay":1200,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
+                data-elementdelay="0.01"
+                data-linktoslide="next"
+                style="align-items: center; text-align: center"
+              >
+                <a
+                  href="./customize.html"
+                  class="btn btn-lg rounded center"
+                  style="background-color: #5969ff"
+                  ><span style="">Summarize</span></a
+                >
+              </div>
+              <div
+                class="tp-caption tp-resizeme"
+                data-x="center"
+                data-y="center"
+                data-hoffset="0"
+                data-voffset="[200, 100, 80, 60]"
+                data-lineheight="[44]"
+                data-frames='[{"from":"y:100px;rX:90deg;opacity:0;","speed":1500,"to":"o:1;","delay":1200,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
+                data-elementdelay="0.01"
+                data-linktoslide="next"
+                style="
+                  align-items: center;
+                  text-align: center;
+                  margin-top: 25px;
+                "
+              >
+                <a
+                  href="./customize.html"
+                  class="btn btn-lg rounded center"
+                  style="background-color: #ef172c"
+                  ><span style="">Back </span></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="back-to-top">
+          <a href="#top"><i class="fa fa-angle-up"></i></a>
+        </div>
+      </div>
+      <!-- end content wrapper -->
+    </div>
+    <!-- end main wrapper -->
+
+    <!-- EOF -->
+
+    <!-- jQuery Scripts -->
+    <script type="text/javascript" src="./assets2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./assets2/js/plugins.js"></script>
+    <script type="text/javascript" src="./assets2/js/scripts.js"></script>
+    <!-- HERE ARE OUR SCRIPTS -->
+    <script type="text/javascript" src="./script/processVideo.js"></script>
+  </body>
+</html>
