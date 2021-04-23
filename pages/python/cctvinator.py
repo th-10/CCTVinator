@@ -1,3 +1,52 @@
+
+
+def get_centres(p1):
+    import numpy as np
+    return np.transpose(np.array([p1[:, 0] + p1[:, 2]/2, p1[:, 1] + p1[:, 3]/2]))
+
+
+def distance(p1, p2):
+    import numpy as np
+    p1 = np.expand_dims(p1, 0)
+    if p2.ndim == 1:
+        p2 = np.expand_dims(p2, 0)
+
+    c1 = get_centres(p1)
+    c2 = get_centres(p2)
+    return np.linalg.norm(c1 - c2, axis=1)
+
+
+def get_nearest(p1, points):
+    import numpy as np
+    """returns index of the point in points that is closest to p1"""
+    return np.argmin(distance(p1, points))
+
+
+def cut(image, coords):
+    (x, y, w, h) = coords
+    return image[y:y+h, x:x+w]
+
+    # In[103]:
+
+
+def overlay(frame, image, coords):
+    import cv2
+    (x, y, w, h) = coords
+    frame[y:y+h, x:x +
+          w] = cv2.addWeighted(frame[y:y+h, x:x+w], 0.5, cut(image, coords), 0.5, 0)
+
+    # In[104]:
+
+
+def sec2HMS(seconds):
+    import time as tm
+    return tm.strftime('%M:%S', tm.gmtime(seconds))
+
+
+def frame2HMS(n_frame, fps):
+    return sec2HMS(float(n_frame)/float(fps))
+
+
 def processVideo(st):
     import os
     import numpy as np
@@ -5,6 +54,8 @@ def processVideo(st):
     import time as tm
     import argparse
     import progressbar
+    import box
+    import moving_obj
     # parser = argparse.ArgumentParser()
     # parser.add_argument("VID_PATH", help="Path to the video to be summarized")
     # parser.add_argument("--INTERVAL_BW_DIVISIONS",
@@ -94,47 +145,6 @@ def processVideo(st):
 
     # ## Object tracking
 
-    # In[4]:
-
-    def get_centres(p1):
-        return np.transpose(np.array([p1[:, 0] + p1[:, 2]/2, p1[:, 1] + p1[:, 3]/2]))
-
-    def distance(p1, p2):
-        p1 = np.expand_dims(p1, 0)
-        if p2.ndim == 1:
-            p2 = np.expand_dims(p2, 0)
-
-        c1 = get_centres(p1)
-        c2 = get_centres(p2)
-        return np.linalg.norm(c1 - c2, axis=1)
-
-    def get_nearest(p1, points):
-        """returns index of the point in points that is closest to p1"""
-        return np.argmin(distance(p1, points))
-
-    # In[5]:
-
-    class box:
-        def _init_(self, coords, time):
-            self.coords = coords  # coordinates
-            self.time = time  # nth frame/time
-
-    class moving_obj:
-        def _init_(self, starting_box):
-            self.boxes = [starting_box]
-
-        def add_box(self, box):
-            self.boxes.append(box)
-
-        def last_coords(self):
-            return self.boxes[-1].coords
-
-        def age(self, curr_time):
-            last_time = self.boxes[-1].time
-            return curr_time - last_time
-
-    # In[100]:
-
     """Will associate boxes into objects"""
     # old - boxes in the previous frame
     # new - boxes in the current frame
@@ -164,17 +174,15 @@ def processVideo(st):
 
         for new_idx, new_coords in enumerate(new_boxes):
             new_assoc = new_assocs[new_idx]
-            new_box = box(new_coords, curr_time)
+            new_box = box.box(new_coords, curr_time)
 
             if new_assoc is not None:
                 # associate new box to moving_obj
                 moving_objs[new_assoc].add_box(new_box)
             else:
                 # add a fresh, new moving_obj to moving_objs
-                new_moving_obj = moving_obj(new_box)
+                new_moving_obj = moving_obj.moving_obj(new_box)
                 moving_objs.append(new_moving_obj)
-
-    # In[101]:
 
     # Removing objects that occur for a very small duration
 
@@ -184,29 +192,6 @@ def processVideo(st):
         obj.boxes[-1].time-obj.boxes[0].time) > MIN_FRAMES]
 
     # ## Overlaying moving objects on background
-
-    # In[102]:
-
-    def cut(image, coords):
-        (x, y, w, h) = coords
-        return image[y:y+h, x:x+w]
-
-    # In[103]:
-
-    def overlay(frame, image, coords):
-        (x, y, w, h) = coords
-        frame[y:y+h, x:x +
-              w] = cv2.addWeighted(frame[y:y+h, x:x+w], 0.5, cut(image, coords), 0.5, 0)
-
-    # In[104]:
-
-    def sec2HMS(seconds):
-        return tm.strftime('%M:%S', tm.gmtime(seconds))
-
-    def frame2HMS(n_frame, fps):
-        return sec2HMS(float(n_frame)/float(fps))
-
-    # In[105]:
 
     max_orig_len = max(obj.boxes[-1].time for obj in moving_objs)
     max_duration = max((obj.boxes[-1].time - obj.boxes[0].time)
@@ -218,8 +203,6 @@ def processVideo(st):
 
     final_video = [background.copy() for _ in range(
         max_duration+int(N_DIVISIONS*GAP_BW_DIVISIONS)+10)]  # initializing frames of final video
-
-    # In[106]:
 
     """Crop moving objects from main video and overlay them on the background"""
     cap = cv2.VideoCapture(VID_PATH)
@@ -285,8 +268,6 @@ def processVideo(st):
     cap.release()
     cv2.destroyAllWindows()
 
-    # In[107]:
-
     # annotating moving objects
     for (t, text, org) in all_texts:
         cv2.putText(final_video[t], text, org,
@@ -294,8 +275,6 @@ def processVideo(st):
         #TODO: DESIGN
 
     # ## Final video
-
-    # In[109]:
 
     print("Writing recap Summary video...")
 
@@ -317,7 +296,4 @@ def processVideo(st):
     print("Done!!")
     print("Summary video is available at " + filename + '_summary.avi')
 
-    # In[ ]:
 
-    # TODO:
-    # mog vs KNN
