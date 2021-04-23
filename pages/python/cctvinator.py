@@ -1,5 +1,3 @@
-
-
 def get_centres(p1):
     import numpy as np
     return np.transpose(np.array([p1[:, 0] + p1[:, 2]/2, p1[:, 1] + p1[:, 3]/2]))
@@ -26,16 +24,12 @@ def cut(image, coords):
     (x, y, w, h) = coords
     return image[y:y+h, x:x+w]
 
-    # In[103]:
-
 
 def overlay(frame, image, coords):
     import cv2
     (x, y, w, h) = coords
     frame[y:y+h, x:x +
           w] = cv2.addWeighted(frame[y:y+h, x:x+w], 0.5, cut(image, coords), 0.5, 0)
-
-    # In[104]:
 
 
 def sec2HMS(seconds):
@@ -83,7 +77,6 @@ def processVideo(st):
 
     # ## Extracting boxes using BGSubtraction
 
-    # In[3]:
 
     """Will give boxes for each frame and simultaneously extract background"""
 
@@ -272,7 +265,7 @@ def processVideo(st):
     for (t, text, org) in all_texts:
         cv2.putText(final_video[t], text, org,
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (252, 240, 3), 2)
-        #TODO: DESIGN
+
 
     # ## Final video
 
