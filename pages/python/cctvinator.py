@@ -77,7 +77,6 @@ def processVideo(st):
 
     # ## Extracting boxes using BGSubtraction
 
-
     """Will give boxes for each frame and simultaneously extract background"""
 
     fgbg = cv2.createBackgroundSubtractorKNN()
@@ -179,10 +178,16 @@ def processVideo(st):
 
     # Removing objects that occur for a very small duration
 
+    # for obj in moving_objs:
+    #     print(obj.boxes)
+
     MIN_FRAMES = MIN_SECONDS*fps
 
     moving_objs = [obj for obj in moving_objs if (
         obj.boxes[-1].time-obj.boxes[0].time) > MIN_FRAMES]
+
+    # for obj in moving_objs:
+    #     print(obj.boxes)
 
     # ## Overlaying moving objects on background
 
@@ -191,6 +196,9 @@ def processVideo(st):
                        for obj in moving_objs)
     # max_duration of a moving_obj. This is taken as the duration of the final summary
     start_times = [obj.boxes[0].time for obj in moving_objs]
+    print(len(moving_objs))
+    for obj in moving_objs:
+        print(len(obj.boxes))
 
     N_DIVISIONS = int(max_orig_len/(INTERVAL_BW_DIVISIONS))
 
@@ -211,6 +219,10 @@ def processVideo(st):
     fcount = -1
 
     print("Cropping moving objects from the main video and overlay them on the bakground....")
+    total_objects = 0
+    timestamps=[]
+    for obj in moving_objs:
+        timestamps.append(obj.boxes[0].time)
 
     with progressbar.ProgressBar(max_value=total_frames) as bar:
 
@@ -231,21 +243,22 @@ def processVideo(st):
                         if(first_box.time == vid_time):
                             final_time = first_box.time - start_times[obj_idx] + int(
                                 int(start_times[obj_idx]/int(INTERVAL_BW_DIVISIONS*fps))*GAP_BW_DIVISIONS*fps)
-
+                            
                             overlay(final_video[final_time-1],
                                     frame, first_box.coords)
                             (x, y, w, h) = first_box.coords
 
-                            #TODO: DESIGN
-        #                     all_texts.append((final_time-1, frame2HMS(first_box.time, fps), (x, y-10))) #Above
+                            # all_texts.append((final_time-1, frame2HMS(first_box.time, fps), (x, y-10))) #Above
                             all_texts.append(
                                 (final_time-1, frame2HMS(first_box.time, fps), (x+int(w/2), y+int(h/2))))  # Centre
+                            
 
                             del(mving_obj.boxes[0])
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
     print("Writing overlay video...")
-
+    print(total_objects)
+    print(timestamps)
     filename = os.path.basename(VID_PATH).split('.')[0]
     out = cv2.VideoWriter(filename+'_overlay.avi', cv2.VideoWriter_fourcc(*
                                                                           'DIVX'), fps, (background.shape[1], background.shape[0]))
@@ -265,7 +278,6 @@ def processVideo(st):
     for (t, text, org) in all_texts:
         cv2.putText(final_video[t], text, org,
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (252, 240, 3), 2)
-
 
     # ## Final video
 
@@ -288,5 +300,7 @@ def processVideo(st):
 
     print("Done!!")
     print("Summary video is available at " + filename + '_summary.avi')
+    for obj in moving_objs:
+        print(obj.boxes)
 
-
+    return {timestamps: timestamps, filename:filename, total_objects: len(moving_objs)}
