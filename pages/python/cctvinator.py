@@ -1,3 +1,6 @@
+from os import times
+
+
 def get_centres(p1):
     import numpy as np
     return np.transpose(np.array([p1[:, 0] + p1[:, 2]/2, p1[:, 1] + p1[:, 3]/2]))
@@ -225,7 +228,7 @@ def processVideo(st):
     total_objects = 0
     timestamps = []
     for obj in moving_objs:
-        timestamps.append(obj.boxes[0].time)
+        timestamps.append(frame2HMS(obj.boxes[0].time, fps))
     new_time = 0
     with progressbar.ProgressBar(max_value=total_frames) as bar:
 
@@ -242,6 +245,7 @@ def processVideo(st):
                 for obj_idx, mving_obj in enumerate(moving_objs):
                     if mving_obj.boxes:  # non-empty
                         first_box = mving_obj.boxes[0]
+                        
 
                         if(first_box.time == vid_time):
                             final_time = first_box.time - start_times[obj_idx] + int(
@@ -260,7 +264,7 @@ def processVideo(st):
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
     print("Writing overlay video...")
-    print(total_objects)
+    # print(all_texts)
     print(timestamps)
     filename = os.path.basename(VID_PATH).split('.')[0]
     out = cv2.VideoWriter(filename+'_overlay.avi', cv2.VideoWriter_fourcc(*
@@ -287,7 +291,7 @@ def processVideo(st):
     print("Writing recap Summary video...")
 
     filename = os.path.basename(VID_PATH).split('.')[0]
-    out = cv2.VideoWriter(filename+'_summary.avi', cv2.VideoWriter_fourcc(*
+    out = cv2.VideoWriter('./../summarized_videos/'+filename+'_summary.avi', cv2.VideoWriter_fourcc(*
                                                                           'DIVX'), fps, (background.shape[1], background.shape[0]))
 
     for frame in final_video:
