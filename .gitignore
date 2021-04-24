@@ -1,3 +1,4 @@
 node_modules
 **/pages/python/__pycache__/
 *.pyc
+*.pyc
