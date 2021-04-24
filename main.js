@@ -15,7 +15,7 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile("./pages/processVideoPage.html");
+  mainWindow.loadFile("./pages/resultPage.html");
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
