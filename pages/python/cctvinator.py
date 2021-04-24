@@ -229,7 +229,7 @@ def processVideo(st):
     timestamps = []
     for obj in moving_objs:
         timestamps.append(frame2HMS(obj.boxes[0].time, fps))
-    new_time = 0
+    new_frames = 0
     with progressbar.ProgressBar(max_value=total_frames) as bar:
 
         while ret:
@@ -260,7 +260,7 @@ def processVideo(st):
                                 (final_time-1, frame2HMS(first_box.time, fps), (x+int(w/2), y+int(h/2))))  # Centre
 
                             del(mving_obj.boxes[0])
-                            new_time = final_time
+                            new_frames = final_time
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
     print("Writing overlay video...")
@@ -310,4 +310,4 @@ def processVideo(st):
     for obj in moving_objs:
         print(obj.boxes)
 
-    return {"actual_length": actual_legth, "actual_frames": total_frames, "new_time": new_time, "timestamps": timestamps, "filename": filename, "total_objects": len(moving_objs)}
+    return {"actual_length": actual_legth, "actual_frames": total_frames, "new_time": new_frames*fps,"new_frames": new_frames,"timestamps": timestamps, "filename": filename, "total_objects": len(moving_objs)}
