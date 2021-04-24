@@ -50,6 +50,7 @@ def processVideo(st):
     import progressbar
     import box
     import moving_obj
+    import datetime
     # parser = argparse.ArgumentParser()
     # parser.add_argument("VID_PATH", help="Path to the video to be summarized")
     # parser.add_argument("--INTERVAL_BW_DIVISIONS",
@@ -63,6 +64,8 @@ def processVideo(st):
 
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     total_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    seconds = int(total_frames / fps)
+    actual_legth = str(datetime.timedelta(seconds=seconds))
 
     CONTINUITY_THRESHOLD = fps  # For cutting out boxes
 
@@ -220,10 +223,10 @@ def processVideo(st):
 
     print("Cropping moving objects from the main video and overlay them on the bakground....")
     total_objects = 0
-    timestamps=[]
+    timestamps = []
     for obj in moving_objs:
         timestamps.append(obj.boxes[0].time)
-
+    new_time = 0
     with progressbar.ProgressBar(max_value=total_frames) as bar:
 
         while ret:
@@ -243,7 +246,7 @@ def processVideo(st):
                         if(first_box.time == vid_time):
                             final_time = first_box.time - start_times[obj_idx] + int(
                                 int(start_times[obj_idx]/int(INTERVAL_BW_DIVISIONS*fps))*GAP_BW_DIVISIONS*fps)
-                            
+
                             overlay(final_video[final_time-1],
                                     frame, first_box.coords)
                             (x, y, w, h) = first_box.coords
@@ -251,9 +254,9 @@ def processVideo(st):
                             # all_texts.append((final_time-1, frame2HMS(first_box.time, fps), (x, y-10))) #Above
                             all_texts.append(
                                 (final_time-1, frame2HMS(first_box.time, fps), (x+int(w/2), y+int(h/2))))  # Centre
-                            
 
                             del(mving_obj.boxes[0])
+                            new_time = final_time
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
     print("Writing overlay video...")
@@ -269,7 +272,7 @@ def processVideo(st):
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-    #     tm.sleep(1/30) #TODO: FPS
+    
     out.release()
     cap.release()
     cv2.destroyAllWindows()
@@ -293,7 +296,7 @@ def processVideo(st):
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-    #     tm.sleep(1/30) #TODO: FPS
+    
     out.release()
     cv2.destroyAllWindows()
     cap.release()
@@ -303,4 +306,4 @@ def processVideo(st):
     for obj in moving_objs:
         print(obj.boxes)
 
-    return {timestamps: timestamps, filename:filename, total_objects: len(moving_objs)}
+    return {"actual_length": actual_legth, "actual_frames": total_frames, "new_time": new_time, "timestamps": timestamps, "filename": filename, "total_objects": len(moving_objs)}
