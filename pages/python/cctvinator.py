@@ -291,9 +291,8 @@ def processVideo(st):
     print("Writing recap Summary video...")
 
     filename = os.path.basename(VID_PATH).split('.')[0]
-    out = cv2.VideoWriter('./../summarized_videos/'+filename+'_summary.avi', cv2.VideoWriter_fourcc(*
-                                                                          'DIVX'), fps, (background.shape[1], background.shape[0]))
-
+    out = cv2.VideoWriter('./../summarized_videos/'+filename+'_summary.mp4', cv2.VideoWriter_fourcc(*'h264'), fps, (background.shape[1], background.shape[0]))
+    #out = cv2.VideoWriter('./../summarized_videos/'+filename+'_summary.mp4', cv2.VideoWriter_fourcc(*'mpeg'), fps, (background.shape[1], background.shape[0]))
     for frame in final_video:
         #cv2.imshow('Video summary',frame)
         out.write(frame)
@@ -306,7 +305,7 @@ def processVideo(st):
     cap.release()
 
     print("Done!!")
-    print("Summary video is available at " + filename + '_summary.avi')
+    print("Summary video is available at " + filename + '_summary.mp4')
     
     
 

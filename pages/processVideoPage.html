@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Upload | Freehand.io</title>
+    <title>CCTVinator</title>
 
     <meta charset="utf-8" />
     <!--[if IE
@@ -153,6 +153,41 @@
         border: 0;
         transition: all 0.2s ease;
       }
+      .lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border: 8px solid #fff;
+        border-radius: 50%;
+        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: #fff transparent transparent transparent;
+      }
+      .lds-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+      }
+      .lds-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+      }
+      .lds-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+      }
+      @keyframes lds-ring {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     </style>
     <script
       class="jsbin"
@@ -202,9 +237,9 @@
                   </div>
                 </div>
                 <div class="file-upload-content">
-                  <img class="file-upload-image" src="#" alt="your image" />
                   <div class="image-title-wrap">
                     <button
+                      id="removeVideoBtnDisable"
                       type="button"
                       onclick="removeUpload()"
                       class="remove-image"
@@ -215,10 +250,11 @@
                 </div>
                 <button
                   class="file-upload-btn"
+                  id="addVideoBtnDisable"
                   type="button"
                   onclick="$('.file-upload-input').trigger( 'click' )"
                 >
-                  Add Image
+                  Add Video and Process
                 </button>
               </div>
             </div>
@@ -238,8 +274,25 @@
               >
                 Upload CCTV Footage to Process and Summarize it.
               </p>
+              <br />
+              <div
+                id="loaderDiv"
+                style="
+                  visibility: hidden;
+                  align-items: center;
+                  text-align: center;
+                "
+              >
+                <img
+                  src="./assets/loader.gif"
+                  alt="loader"
+                  style="text-align: center"
+                />
+                <p>Please wait.</p>
+              </div>
 
               <div
+                id="hideBtn"
                 class="tp-caption tp-resizeme"
                 data-x="center"
                 data-y="center"
@@ -249,15 +302,21 @@
                 data-frames='[{"from":"y:100px;rX:90deg;opacity:0;","speed":1500,"to":"o:1;","delay":1200,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
                 data-elementdelay="0.01"
                 data-linktoslide="next"
-                style="align-items: center; text-align: center"
+                style="
+                  align-items: center;
+                  text-align: center;
+
+                  visibility: hidden;
+                "
               >
                 <a
-                  href="./customize.html"
+                  href="./resultPage.html"
                   class="btn btn-lg rounded center"
                   style="background-color: #5969ff"
-                  ><span style="">Summarize</span></a
+                  ><span>Next</span></a
                 >
               </div>
+
               <div
                 class="tp-caption tp-resizeme"
                 data-x="center"
@@ -275,10 +334,10 @@
                 "
               >
                 <a
-                  href="./customize.html"
+                  href="./index.html"
                   class="btn btn-lg rounded center"
                   style="background-color: #ef172c"
-                  ><span style="">Back </span></a
+                  ><span>Back </span></a
                 >
               </div>
             </div>
@@ -286,7 +345,7 @@
         </div>
 
         <div id="back-to-top">
-          <a href="#top"><i class="fa fa-angle-up"></i></a>
+          <a href="./../videos/"><i class="fa fa-angle-up"></i></a>
         </div>
       </div>
       <!-- end content wrapper -->

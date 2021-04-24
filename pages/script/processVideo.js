@@ -1,9 +1,11 @@
 var imagelink;
-function readURL(input) {
+async function readURL(input) {
   if (input.files && input.files[0]) {
+    console.log(input.files[0].name);
+
     var reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       $(".image-upload-wrap").hide();
 
       $(".file-upload-image").attr("src", e.target.result);
@@ -23,45 +25,49 @@ function readURL(input) {
         return false;
       }
 
-      // Begin file upload
-      console.log("Uploading file to Imgur..");
-
-      // Replace ctrlq with your own API key
-      var apiUrl = "https://api.imgur.com/3/image";
-      var apiKey = "e48ab4fb905ea1b";
-
-      var settings = {
-        async: false,
-        crossDomain: true,
-        processData: false,
-        contentType: false,
-        type: "POST",
-        url: apiUrl,
-        headers: {
-          Authorization: "Client-ID " + apiKey,
-          Accept: "application/json"
-        },
-        mimeType: "multipart/form-data"
-      };
+      // var settings = {
+      //   async: false,
+      //   crossDomain: true,
+      //   processData: false,
+      //   contentType: false,
+      //   type: "POST",
+      //   url: apiUrl,
+      //   headers: {
+      //     Authorization: "Client-ID " + apiKey,
+      //     Accept: "application/json"
+      //   },
+      //   mimeType: "multipart/form-data"
+      // };
 
       var formData = new FormData();
       formData.append("image", $files[0]);
-      settings.data = formData;
+      // settings.data = formData;
 
-      // Response contains stringified JSON
-      // Image URL available at response.data.link
-      $.ajax(settings).done(function(response) {
-        console.log(response);
-        //var newData = JSON.parse(data).pri_tag;
-        var imagelink = JSON.parse(response).data.link;
-        localStorage.setItem("url", imagelink.toString());
+      //loader On
+      document.getElementById("loaderDiv").style.visibility = "visible";
 
-        console.log(JSON.parse(response).data.link);
-      });
+      var path = "./../videos/" + input.files[0].name;
+      await $.get(
+        "http://127.0.0.1:5000/getVideo",
+        { path: path },
+        function (data) {
+          console.log(data);
+          data = JSON.stringify(data);
+          localStorage.setItem("allData", data);
+        }
+      );
+
+      //loader off
+      document.getElementById("loaderDiv").style.visibility = "hidden";
+
+      //btn next visible
+      document.getElementById("hideBtn").style.visibility = "visible";
     }
   } else {
     removeUpload();
   }
+  document.getElementById("addVideoBtnDisable").disabled = true;
+  document.getElementById("removeVideoBtnDisable").disabled = true;
 }
 
 function removeUpload() {
@@ -69,9 +75,9 @@ function removeUpload() {
   $(".file-upload-content").hide();
   $(".image-upload-wrap").show();
 }
-$(".image-upload-wrap").bind("dragover", function() {
+$(".image-upload-wrap").bind("dragover", function () {
   $(".image-upload-wrap").addClass("image-dropping");
 });
-$(".image-upload-wrap").bind("dragleave", function() {
+$(".image-upload-wrap").bind("dragleave", function () {
   $(".image-upload-wrap").removeClass("image-dropping");
 });
