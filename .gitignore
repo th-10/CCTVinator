@@ -1,2 +1,3 @@
 node_modules
-/pages/python/__pycache__/*
+**/pages/python/__pycache__/
+*.pyc
