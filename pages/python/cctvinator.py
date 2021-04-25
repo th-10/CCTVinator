@@ -293,9 +293,11 @@ def processVideo(st):
     filename = os.path.basename(VID_PATH).split('.')[0]
     out = cv2.VideoWriter('./../summarized_videos/'+filename+'_summary.mp4', cv2.VideoWriter_fourcc(*'h264'), fps, (background.shape[1], background.shape[0]))
     #out = cv2.VideoWriter('./../summarized_videos/'+filename+'_summary.mp4', cv2.VideoWriter_fourcc(*'mpeg'), fps, (background.shape[1], background.shape[0]))
+    new_frames=0
     for frame in final_video:
         #cv2.imshow('Video summary',frame)
         out.write(frame)
+        new_frames+=1
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
@@ -309,4 +311,4 @@ def processVideo(st):
     
     
 
-    return {"actual_length": actual_legth, "actual_frames": total_frames, "new_time": frame2HMS(new_time+1,fps),"new_frames": new_time,"timestamps": timestamps, "filename": filename, "total_objects": len(moving_objs)}
+    return {"actual_length": actual_legth, "actual_frames": total_frames, "new_time": frame2HMS(new_frames+1,fps),"new_frames": new_frames,"timestamps": timestamps, "filename": filename, "total_objects": len(moving_objs)}
