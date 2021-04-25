@@ -95,8 +95,8 @@ rel="stylesheet">
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <i class="fas fa-f fa-cloud"></i>Cloud Storage</a
+                  <a class="nav-link" href="#" onclick="openCloudinary()">
+                    <i class="fas fa-f fa-cloud" ></i>Cloud Storage</a
                   >
                 </li>
               </ul>
@@ -309,6 +309,7 @@ rel="stylesheet">
                        <span class="">Upload to Cloud</span>
   <label for="myfile">Select a file:</label>
   <input type="file" id="myfile" name="myfile"  accept="video/*"  ><br><br>
+  <h5 id="videolinktext" style="visibility: hidden;" onclick="openCloud()">Click here to view Video</h5>
   <span id="fileSelect" class="float-right text-dark" onclick="uploadclick()">  <a   class="btn btn-rounded btn-primary"><i class="fab fa-fw fa-wpforms" style="padding-right: 10px;"></i>Upload</a></span>
 </form>
                      <!-- <form class="my-form"> -->

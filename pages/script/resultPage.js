@@ -18,6 +18,8 @@
 //   window.onresize = resizeVideoJS;
 // });
 
+var videoUrl="";
+
 var data = localStorage.getItem("allData");
 console.log(data);
 var data2 = JSON.parse(data);
@@ -67,10 +69,10 @@ function openExplorer() {
   });
 }
 // cloud
-var cl = new cloudinary.Cloudinary({ cloud_name: "demo", secure: true });
+// var cl = new cloudinary.Cloudinary({ cloud_name: "demo", secure: true });
 
 //
-////////////////////////////put credentials
+////////////////////////////put credentials//////////////////////////////////////////////////////////////////////////////
 
 var fileSelect = document.getElementById("fileSelect"),
   fileElem = document.getElementById("fileElem"),
@@ -114,7 +116,10 @@ function uploadFile(file) {
       // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
       var url = response.secure_url;
 
+      videoUrl = url; 
       console.log(url);
+      document.getElementById('')
+      // openCloud(url);
       // Create a thumbnail of the uploaded image, with 150px width
       var tokens = url.split("/");
       tokens.splice(-2, 0, "w_150,c_scale");
@@ -130,6 +135,7 @@ function uploadFile(file) {
   fd.append("public_id", "CCTVinator/" + file.name);
   fd.append("file", file);
   xhr.send(fd);
+  document.getElementById("videolinktext").style.visibility = "visible"
 }
 
 // *********** Handle selected files ******************** //
@@ -139,3 +145,16 @@ function uploadFile(file) {
 //     console.log(files);
 //   }
 // };
+
+function openCloud(){
+  console.log(videoUrl)
+  $.get("http://127.0.0.1:5000/openCloud", { link: videoUrl }, function (data) {
+    console.log(data);
+  });
+}
+
+function openCloudinary(){
+  $.get("http://127.0.0.1:5000/openCloud", { link: "https://cloudinary.com/console/c-dccfe4d88c1407196d6d97c3938a6a/media_library/folders/7813ee3790f3a9f1ba18ea2f595164e0" }, function (data) {
+    console.log(data);
+  });
+}
