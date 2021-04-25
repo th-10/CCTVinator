@@ -73,9 +73,7 @@ function openExplorer() {
 
 //
 ////////////////////////////put credentials//////////////////////////////////////////////////////////////////////////////
-const cloudName = "dztcftsli";
-const cloudurl = "	https://api.cloudinary.com/v1_1/dztcftsli";
-const unsignedUploadPreset = "ujia2k82";
+
 var fileSelect = document.getElementById("fileSelect"),
   fileElem = document.getElementById("fileElem"),
   urlSelect = document.getElementById("urlSelect");
