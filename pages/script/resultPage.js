@@ -18,7 +18,7 @@
 //   window.onresize = resizeVideoJS;
 // });
 
-var videoUrl="";
+var videoUrl = "";
 
 var data = localStorage.getItem("allData");
 console.log(data);
@@ -73,7 +73,9 @@ function openExplorer() {
 
 //
 ////////////////////////////put credentials//////////////////////////////////////////////////////////////////////////////
-
+const cloudName = "dztcftsli";
+const cloudurl = "	https://api.cloudinary.com/v1_1/dztcftsli";
+const unsignedUploadPreset = "ujia2k82";
 var fileSelect = document.getElementById("fileSelect"),
   fileElem = document.getElementById("fileElem"),
   urlSelect = document.getElementById("urlSelect");
@@ -115,10 +117,10 @@ function uploadFile(file) {
       document.getElementById("pro1").style.visibility = "hidden";
       // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
       var url = response.secure_url;
-
-      videoUrl = url; 
+      document.getElementById("videolinktext").style.visibility = "visible";
+      videoUrl = url;
       console.log(url);
-      document.getElementById('')
+      document.getElementById("");
       // openCloud(url);
       // Create a thumbnail of the uploaded image, with 150px width
       var tokens = url.split("/");
@@ -135,7 +137,6 @@ function uploadFile(file) {
   fd.append("public_id", "CCTVinator/" + file.name);
   fd.append("file", file);
   xhr.send(fd);
-  document.getElementById("videolinktext").style.visibility = "visible"
 }
 
 // *********** Handle selected files ******************** //
@@ -146,15 +147,22 @@ function uploadFile(file) {
 //   }
 // };
 
-function openCloud(){
-  console.log(videoUrl)
+function openCloud() {
+  console.log(videoUrl);
   $.get("http://127.0.0.1:5000/openCloud", { link: videoUrl }, function (data) {
     console.log(data);
   });
 }
 
-function openCloudinary(){
-  $.get("http://127.0.0.1:5000/openCloud", { link: "https://cloudinary.com/console/c-dccfe4d88c1407196d6d97c3938a6a/media_library/folders/7813ee3790f3a9f1ba18ea2f595164e0" }, function (data) {
-    console.log(data);
-  });
+function openCloudinary() {
+  $.get(
+    "http://127.0.0.1:5000/openCloud",
+    {
+      link:
+        "https://cloudinary.com/console/c-dccfe4d88c1407196d6d97c3938a6a/media_library/folders/7813ee3790f3a9f1ba18ea2f595164e0",
+    },
+    function (data) {
+      console.log(data);
+    }
+  );
 }

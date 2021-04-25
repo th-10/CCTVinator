@@ -20,7 +20,7 @@ def open():
 @app.route("/openCloud")
 def openCloudinary():
     url = request.args.get('link')
-    chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+    chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
 
     webbrowser.get(chrome_path).open(url)
     return "Q"
